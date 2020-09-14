@@ -1,0 +1,15 @@
+{
+    "name": "ArtAndFlywork/kirby.plugin.fieldset",
+    "description": "Panel field which loads a fieldset and stores the values in a single field as yaml",
+    "type": "kirby-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matthijs C. Brouwer",
+            "email": "matthijs@artandflywork.com"
+        }
+    ],
+    "require": {
+        "getkirby/composer-installer": "^1.1"
+    }
+}
