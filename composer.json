@@ -1,5 +1,5 @@
 {
-    "name": "ArtAndFlywork/kirby.plugin.fieldset",
+    "name": "art-and-flywork/kirby.plugin.fieldset",
     "description": "Panel field which loads a fieldset and stores the values in a single field as yaml",
     "type": "kirby-plugin",
     "license": "MIT",
