@@ -8,6 +8,7 @@ Create a blueprint with a fieldset:
 
 site/blueprints/fieldsets/somefields.yml
 ```
+type: group
 fields:
   title:
     type: text
@@ -16,6 +17,7 @@ fields:
     type: textarea
     label: Type your text here
 ```
+*the `type: group` is not mandatory for this plugin to work, but it will make it work as a standard kirby field extend too when needed.*
 
 In your page yml add the fieldset field and point it to the fieldset blueprint:
 
