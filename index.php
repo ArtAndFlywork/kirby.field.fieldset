@@ -1,6 +1,28 @@
 <?php
 
 Use Kirby\Cms\Blueprint;
+use Kirby\Cms\Api;
+use Kirby\Cms\Form;
+
+/**
+ * Calls the API endpoint for a nested field (e.g. a structure or a fieles field)
+ */
+function fieldSetCallFieldApi($ApiInstance, $context, $path) {
+
+  // this should be fixed..
+  return 'This is where it goes wrong. This part should be fixed.';
+
+  // $fieldpath = $path;
+  // $path = Str::split($path, '+');
+  // $form = Form::for($context);
+  // // dump($form);die();
+  // $field = fieldFromPath($path, $context, $form->fields()->toArray());
+  // $fieldApi = $ApiInstance->clone([
+  //   'routes' => $field->api(),
+  //   'data'   => array_merge($ApiInstance->data(), ['field' => $field])
+  // ]);
+  // return $fieldApi->call('files', $ApiInstance->requestMethod(), $ApiInstance->requestData());
+}
 
 Kirby::plugin('reprovinci/fieldset', [
     'fieldMethods' => [
@@ -42,7 +64,20 @@ Kirby::plugin('reprovinci/fieldset', [
                     // grab the data from the text file pass it as array
                     return Yaml::decode($this->value());
                 }
-            ]
+            ],
         ],
-    ]
+    ],
+    'api' => [
+        'routes' => [
+            [
+                'pattern' => 'fieldset/pages/(:any)/fields/(:all)',
+                'method'  => 'ALL',
+                'action'  => function (string $id, string $path = null) {            
+                    if ($page = $this->page($id)) {
+                        return fieldSetCallFieldApi($this, $page, $path);
+                    }
+                }
+            ],
+        ]
+    ],
 ]);

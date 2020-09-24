@@ -2,7 +2,7 @@
   <k-field label="" class="fieldset" :data-blueprint="blueprint">
     <k-headline-field :label="label" />
     <k-line-field />
-    <k-fieldset v-model="storedvalues" @input="onInput" :fields="fieldset" />
+    <k-fieldset :fields="fieldsetFields" v-model="storedvalues" @input="onInput" />
   </k-field>
 </template>
 
@@ -13,6 +13,33 @@ export default {
     storedvalues: Object,
     label: String,
     blueprint: String,
+    name: String
+  },
+  computed: {
+    fieldsetFields() {
+      let fields = {};
+      Object.keys(this.fieldset).forEach(name => {
+        let field = this.fieldset[name];
+        field.section = this.name;
+        var ep = this.$attrs.endpoints;        
+        field.endpoints = {
+          field: `fieldset/${ep.model}/fields/${field.section}+${name}`,
+          model: ep.model,
+          section: ep.field,
+        };
+
+        // for reference: 🕵️‍♂️
+        // var thisIsWhatKirbyBuilderDoes = {
+        //   field: "kirby-builder/pages/testpagina-1/fields/bld+mwep+hello",
+        //   model: "pages/testpagina-1",
+        //   section: "pages/testpagina-1/sections/body",
+        // };
+
+        fields[name] = field;
+      });
+
+      return fields;
+    },
   },
   methods: {
     onInput(fieldsetValues) {

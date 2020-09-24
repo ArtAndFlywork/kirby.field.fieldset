@@ -8917,7 +8917,33 @@ var _default = {
     fieldset: Object,
     storedvalues: Object,
     label: String,
-    blueprint: String
+    blueprint: String,
+    name: String
+  },
+  computed: {
+    fieldsetFields: function fieldsetFields() {
+      var _this = this;
+
+      var fields = {};
+      Object.keys(this.fieldset).forEach(function (name) {
+        var field = _this.fieldset[name];
+        field.section = _this.name;
+        var ep = _this.$attrs.endpoints;
+        field.endpoints = {
+          field: "fieldset/".concat(ep.model, "/fields/").concat(field.section, "+").concat(name),
+          model: ep.model,
+          section: ep.field
+        }; // for reference: 🕵️‍♂️
+        // var thisIsWhatKirbyBuilderDoes = {
+        //   field: "kirby-builder/pages/testpagina-1/fields/bld+mwep+hello",
+        //   model: "pages/testpagina-1",
+        //   section: "pages/testpagina-1/sections/body",
+        // };
+
+        fields[name] = field;
+      });
+      return fields;
+    }
   },
   methods: {
     onInput: function onInput(fieldsetValues) {
@@ -8961,7 +8987,7 @@ exports.default = _default;
       _c("k-line-field"),
       _vm._v(" "),
       _c("k-fieldset", {
-        attrs: { fields: _vm.fieldset },
+        attrs: { fields: _vm.fieldsetFields },
         on: { input: _vm.onInput },
         model: {
           value: _vm.storedvalues,
