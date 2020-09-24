@@ -8891,6 +8891,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 //
 //
 //
@@ -8907,21 +8920,31 @@ var _default = {
     blueprint: String
   },
   methods: {
-    onInput: function onInput(value) {
-      console.log('fieldset fields changed, updating');
-      this.$emit("input", value);
+    onInput: function onInput(fieldsetValues) {
+      // I don't know why, but have to rewrite fieldsetValues to store the values:
+      var valuesObj = {};
+
+      for (var _i = 0, _Object$entries = Object.entries(fieldsetValues); _i < _Object$entries.length; _i++) {
+        var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+            key = _Object$entries$_i[0],
+            value = _Object$entries$_i[1];
+
+        valuesObj[key] = value;
+      }
+
+      this.$emit("input", valuesObj);
     }
   }
 };
 exports.default = _default;
-        var $ef93f6 = exports.default || module.exports;
+        var $126ee2 = exports.default || module.exports;
       
-      if (typeof $ef93f6 === 'function') {
-        $ef93f6 = $ef93f6.options;
+      if (typeof $126ee2 === 'function') {
+        $126ee2 = $126ee2.options;
       }
     
         /* template */
-        Object.assign($ef93f6, (function () {
+        Object.assign($126ee2, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -8972,9 +8995,9 @@ render._withStripped = true
         if (api.compatible) {
           module.hot.accept();
           if (!module.hot.data) {
-            api.createRecord('$ef93f6', $ef93f6);
+            api.createRecord('$126ee2', $126ee2);
           } else {
-            api.reload('$ef93f6', $ef93f6);
+            api.reload('$126ee2', $126ee2);
           }
         }
 
@@ -9025,7 +9048,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62684" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49498" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
