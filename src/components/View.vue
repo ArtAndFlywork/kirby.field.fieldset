@@ -1,4 +1,5 @@
 <template>
+  <!-- <k-form v-model="contact" @input="onInput" :fields="fieldsetFields" /> -->
   <k-field label="" class="fieldset" :data-blueprint="blueprint">
     <k-headline-field :label="label" />
     <k-line-field />
@@ -13,7 +14,7 @@ export default {
     storedvalues: Object,
     label: String,
     blueprint: String,
-    name: String
+    name: String,
   },
   computed: {
     fieldsetFields() {
@@ -23,18 +24,10 @@ export default {
         field.section = this.name;
         var ep = this.$attrs.endpoints;        
         field.endpoints = {
-          field: `fieldset/${ep.model}/fields/${field.section}+${name}`,
+          field: `${ep.model}/fields/${field.section}+${name}`,
           model: ep.model,
           section: ep.field,
         };
-
-        // for reference: 🕵️‍♂️
-        // var thisIsWhatKirbyBuilderDoes = {
-        //   field: "kirby-builder/pages/testpagina-1/fields/bld+mwep+hello",
-        //   model: "pages/testpagina-1",
-        //   section: "pages/testpagina-1/sections/body",
-        // };
-
         fields[name] = field;
       });
 
@@ -43,11 +36,26 @@ export default {
   },
   methods: {
     onInput(fieldsetValues) {
+      // console.log(fieldsetValues);
       // I don't know why, but have to rewrite fieldsetValues to store the values:
       var valuesObj = {};
       for (const [key, value] of Object.entries(fieldsetValues)) {
-        valuesObj[key] = value;
-      }      
+        if(typeof value === 'object') {
+          for (const [fkey, fvalue] of Object.entries(value)) {
+            console.log(fkey);
+            console.log(fvalue);
+            if (fvalue['filename']) {
+              console.log(fvalue['filename']);
+              valuesObj[key] = [fvalue['filename']];
+            } 
+            else if (fvalue['link']) {
+              valuesObj[key] = [fvalue['link']];
+            }
+          }
+        } else {
+          valuesObj[key] = value;
+        }
+      }  
       this.$emit("input", valuesObj);
     }
   }

@@ -8892,6 +8892,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -8904,6 +8906,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+//
 //
 //
 //
@@ -8930,16 +8933,10 @@ var _default = {
         field.section = _this.name;
         var ep = _this.$attrs.endpoints;
         field.endpoints = {
-          field: "fieldset/".concat(ep.model, "/fields/").concat(field.section, "+").concat(name),
+          field: "".concat(ep.model, "/fields/").concat(field.section, "+").concat(name),
           model: ep.model,
           section: ep.field
-        }; // for reference: 🕵️‍♂️
-        // var thisIsWhatKirbyBuilderDoes = {
-        //   field: "kirby-builder/pages/testpagina-1/fields/bld+mwep+hello",
-        //   model: "pages/testpagina-1",
-        //   section: "pages/testpagina-1/sections/body",
-        // };
-
+        };
         fields[name] = field;
       });
       return fields;
@@ -8947,6 +8944,7 @@ var _default = {
   },
   methods: {
     onInput: function onInput(fieldsetValues) {
+      // console.log(fieldsetValues);
       // I don't know why, but have to rewrite fieldsetValues to store the values:
       var valuesObj = {};
 
@@ -8955,7 +8953,25 @@ var _default = {
             key = _Object$entries$_i[0],
             value = _Object$entries$_i[1];
 
-        valuesObj[key] = value;
+        if (_typeof(value) === 'object') {
+          for (var _i2 = 0, _Object$entries2 = Object.entries(value); _i2 < _Object$entries2.length; _i2++) {
+            var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
+                fkey = _Object$entries2$_i[0],
+                fvalue = _Object$entries2$_i[1];
+
+            console.log(fkey);
+            console.log(fvalue);
+
+            if (fvalue['filename']) {
+              console.log(fvalue['filename']);
+              valuesObj[key] = [fvalue['filename']];
+            } else if (fvalue['link']) {
+              valuesObj[key] = [fvalue['link']];
+            }
+          }
+        } else {
+          valuesObj[key] = value;
+        }
       }
 
       this.$emit("input", valuesObj);
@@ -9074,7 +9090,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61211" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60467" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
