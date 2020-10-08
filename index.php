@@ -7,33 +7,67 @@ use Kirby\Cms\Form;
 /**
  * Calls the API endpoint for a nested field (e.g. a structure or a fieles field)
  */
-function fieldSetCallFieldApi($ApiInstance, $context, $path) {
+function fieldSetCallFieldApi($ApiInstance, $fieldPath, $context, $path) {
 
   // this should be fixed..
-  return 'This is where it goes wrong. This part should be fixed.';
+  $fieldPath = Str::split($fieldPath, '+');
+  $form = Form::for($context);
+  $field = fieldsetFieldFromPath($fieldPath, $context, $form->fields()->toArray());
+  $fieldApi = $ApiInstance->clone([
+    'routes' => $field->api(),
+    'data'   => array_merge($ApiInstance->data(), ['field' => $field])
+  ]);
+  return $fieldApi->call($path, $ApiInstance->requestMethod(), $ApiInstance->requestData());
+}
 
-  // $fieldpath = $path;
-  // $path = Str::split($path, '+');
-  // $form = Form::for($context);
-  // // dump($form);die();
-  // $field = fieldFromPath($path, $context, $form->fields()->toArray());
-  // $fieldApi = $ApiInstance->clone([
-  //   'routes' => $field->api(),
-  //   'data'   => array_merge($ApiInstance->data(), ['field' => $field])
-  // ]);
-  // return $fieldApi->call('files', $ApiInstance->requestMethod(), $ApiInstance->requestData());
+/**
+ * Gets a nested Field Object, also from within nested builder, by recursively iterating and extending through the configurations.
+ * 
+ * @param array $fieldPath
+ * @param \Kirby\Cms\Page $page
+ * @param array $fields
+ * @return \Kirby\Form\Field
+ */
+function fieldsetFieldFromPath($fieldPath, $page, $fields) {
+    $fieldsetFieldName = array_shift($fieldPath);
+    $fieldName = $fieldPath[0];
+    $fieldProps = $fields[$fieldsetFieldName];
+    $fieldType = $fieldProps['fieldset'][$fieldName]['type'];
+    // $field = $fieldProps['fieldset'][$fieldPath];
+    // dump($fieldName);
+    // dump($fieldsetFieldName);
+    // dump($fieldType);
+    // dump($fieldProps['fields']);die();
+    return new Field($fieldType, $fieldName, $fieldType = $fieldProps['fieldset'][$fieldName]);
+    // die();
+    // if ($fieldProps['type'] === 'builder' && count($fieldPath) > 0) {
+    //   $fieldsetKey = array_shift($fieldPath);
+    //   $fieldset = $fieldProps['fieldsets'][$fieldsetKey];
+    //   $fieldset = BuilderBlueprint::extend($fieldset);
+    //   $fieldset = extendRecursively($fieldset, $page, '__notNull');
+    //   if (array_key_exists('tabs', $fieldset) && is_array($fieldset['tabs'])) {
+    //     $fieldsetFields = [];
+    //     foreach ( $fieldset['tabs'] as $tabKey => $tab) {
+    //       $fieldsetFields = array_merge($fieldsetFields, $tab['fields']);
+    //     }
+    //   } else {
+    //     $fieldsetFields = $fieldset['fields'];
+    //   }
+    //   return fieldFromPath($fieldPath, $page, $fieldsetFields);
+    // } else if ($fieldProps['type'] === 'structure' && count($fieldPath) > 0) {
+    //   return fieldFromPath($fieldPath, $page, $fieldProps['fields']);
+    // } else {
+    //   $fieldProps['model'] = $page;
+    //   return new Field($fieldProps['type'], $fieldProps);
+    // }
 }
 
 Kirby::plugin('reprovinci/fieldset', [
     'fieldMethods' => [
         'fieldset' => function($data) {
             $struct = new Structure([$data->yaml()], $data->parent());
+            // todo: sanity checks
             return $struct->first();
-            // // todo: sanity checks
-            // foreach($data->yaml() as $field => $var) {
-            //     dump($field);
-            // }
-            // die();
         }
     ],
     'fields' => [
@@ -70,11 +104,11 @@ Kirby::plugin('reprovinci/fieldset', [
     'api' => [
         'routes' => [
             [
-                'pattern' => 'fieldset/pages/(:any)/fields/(:all)',
+                'pattern' => 'fieldset/pages/(:any)/fields/(:any)/(:all?)',
                 'method'  => 'ALL',
-                'action'  => function (string $id, string $path = null) {            
+                'action'  => function (string $id, string $fieldPath, string $path = null) {
                     if ($page = $this->page($id)) {
-                        return fieldSetCallFieldApi($this, $page, $path);
+                        return fieldSetCallFieldApi($this, $fieldPath, $page, $path);
                     }
                 }
             ],
