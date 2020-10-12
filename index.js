@@ -8924,6 +8924,12 @@ var _default = {
     name: String
   },
   computed: {
+    computedStoredValues: function computedStoredValues() {
+      // console.log(this.storedvalues);
+      // console.log(this.fieldset);
+      // console.log(this.$helper.clone(this.fieldset));
+      return this.storedvalues;
+    },
     fieldsetFields: function fieldsetFields() {
       var _this = this;
 
@@ -8932,10 +8938,11 @@ var _default = {
         var field = _this.fieldset[name];
         field.section = _this.name;
         var ep = _this.$attrs.endpoints;
+        console.log(ep);
         field.endpoints = {
           field: "".concat(ep.model, "/fields/").concat(field.section, "+").concat(name),
           model: ep.model,
-          section: ep.field
+          section: ep.section
         };
         fields[name] = field;
       });
@@ -8959,15 +8966,13 @@ var _default = {
                 fkey = _Object$entries2$_i[0],
                 fvalue = _Object$entries2$_i[1];
 
-            console.log(fkey);
-            console.log(fvalue);
-
+            // cleanup file field entry
             if (fvalue['filename']) {
-              console.log(fvalue['filename']);
               valuesObj[key] = [fvalue['filename']];
-            } else if (fvalue['link']) {
-              valuesObj[key] = [fvalue['link']];
-            }
+            } // cleanup link field entry
+            else if (fvalue['link']) {
+                valuesObj[key] = [fvalue['id']];
+              }
           }
         } else {
           valuesObj[key] = value;
@@ -9006,11 +9011,11 @@ exports.default = _default;
         attrs: { fields: _vm.fieldsetFields },
         on: { input: _vm.onInput },
         model: {
-          value: _vm.storedvalues,
+          value: _vm.computedStoredValues,
           callback: function($$v) {
-            _vm.storedvalues = $$v
+            _vm.computedStoredValues = $$v
           },
-          expression: "storedvalues"
+          expression: "computedStoredValues"
         }
       })
     ],
@@ -9090,7 +9095,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60467" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54175" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -114,7 +114,15 @@ Kirby::plugin('reprovinci/fieldset', [
             'computed' => [
                 'storedvalues' => function () {
                     // grab the data from the text file pass it as array
-                    return Yaml::decode($this->value());
+                    $vals = Yaml::decode($this->value());
+                    // foreach($vals as $key => $val) {
+                    //     if (is_array($val)) {
+                    //         $val = Yaml::encode($val);
+                    //     }
+                    //     $vals[$key] = $val;
+                    // }
+                    // dump($vals);die();
+                    return $vals;
                 }
             ],
         ],
